@@ -1,0 +1,83 @@
+include: package:lints/recommended.yaml
+
+analyzer:
+  strong-mode:
+    implicit-casts: false  # Disallow implicit casts.
+    implicit-dynamic: false  # Disallow implicit dynamic types.
+
+  errors:
+    missing_return: error
+    unused_local_variable: warning
+    dead_code: error
+    invalid_assignment: error
+    invalid_cast_function_expr: error
+    invalid_cast_function: error
+    invalid_cast_method: error
+    invalid_cast_literal_list: error
+    invalid_cast_literal_map: error
+    invalid_cast_literal_set: error
+    invalid_cast_new_expr: error
+    invalid_override: error
+
+linter:
+  rules:
+    # Strict Lint Rules
+    always_declare_return_types: true
+    always_put_required_named_parameters_first: true
+    always_specify_types: true
+    annotate_overrides: true
+    avoid_annotating_with_dynamic: true
+    avoid_empty_else: true
+    avoid_init_to_null: true
+    avoid_redundant_argument_values: true
+    avoid_single_cascade_in_expression_statements: true
+    avoid_types_as_parameter_names: true
+    avoid_unused_constructor_parameters: true
+    await_only_futures: true
+    cancel_subscriptions: true
+    close_sinks: true
+    constant_identifier_names: true
+    control_flow_in_finally: true
+    curly_braces_in_flow_control_structures: true
+    depend_on_referenced_packages: true
+    empty_constructor_bodies: true
+    file_names: true
+    hash_and_equals: true
+    join_return_with_assignment: true
+    no_adjacent_strings_in_list: true
+    non_constant_identifier_names: true
+    null_closures: true
+    omit_local_variable_types: false
+    prefer_adjacent_string_concatenation: true
+    prefer_const_constructors: true
+    prefer_const_constructors_in_immutables: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_final_fields: true
+    prefer_final_locals: true
+    prefer_function_declarations_over_variables: true
+    prefer_if_elements_to_conditional_expressions: true
+    prefer_initializing_formals: true
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    prefer_typing_uninitialized_variables: true
+    prefer_expression_function_bodies: true
+    provide_deprecation_message: true
+    require_trailing_commas: true
+    sized_box_for_whitespace: true
+    sort_child_properties_last: true
+    sort_constructors_first: true
+    sort_unnamed_constructors_first: true
+    type_annotate_public_apis: true
+    unawaited_futures: true
+    unnecessary_const: true
+    unnecessary_new: true
+    unnecessary_null_aware_assignments: true
+    unnecessary_overrides: true
+    unnecessary_parenthesis: true
+    unnecessary_this: true
+    use_function_type_syntax_for_parameters: true
+    use_full_hex_values_for_flutter_colors: true
+    use_key_in_widget_constructors: true
+    use_rethrow_when_possible: true
+    use_setters_to_change_properties: true
