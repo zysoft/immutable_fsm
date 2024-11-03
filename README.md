@@ -247,7 +247,5 @@ class ReceivingCoin extends FSMState<TurnstileEvent, TurnstileMetadata> {
 }
 ```
 
-In this example, the `ReceivingCoin` state verifies the coin's value. If the value matches, it 
-
-emits a new metadata object and triggers the `unlock` event. Otherwise, it emits an error event.
+In this example, the `ReceivingCoin` state verifies the coin's value. If the value matches, it emits a new metadata object and triggers the `unlock` event. Otherwise, it emits an error event.
 
