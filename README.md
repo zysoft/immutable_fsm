@@ -53,6 +53,10 @@ between the states. We will use the following:
 - `unlock` - an even that unlocks the turnstile, allowing user to pass through
 - `error` - an even that happens when an error occurs
 
+Here is the visualization of the described model:
+
+![Turnstile Model](https://raw.githubusercontent.com/zysoft/immutable_fsm/refs/heads/main/doc/turnstile_model.png)
+
 ### Creating an FSM
 
 To start, define the FSM states and events. States represent the different conditions or modes of 
