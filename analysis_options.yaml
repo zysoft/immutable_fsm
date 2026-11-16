@@ -1,22 +1,16 @@
 include: package:lints/recommended.yaml
 
 analyzer:
-  strong-mode:
-    implicit-casts: false  # Disallow implicit casts.
-    implicit-dynamic: false  # Disallow implicit dynamic types.
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
 
   errors:
     missing_return: error
     unused_local_variable: warning
     dead_code: error
     invalid_assignment: error
-    invalid_cast_function_expr: error
-    invalid_cast_function: error
-    invalid_cast_method: error
-    invalid_cast_literal_list: error
-    invalid_cast_literal_map: error
-    invalid_cast_literal_set: error
-    invalid_cast_new_expr: error
     invalid_override: error
 
 linter:

@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 
 /// An immutable
@@ -23,34 +22,31 @@ final class ImmutableFSM<Event, Data> {
   ///
   /// [initialState] **is not receiving** [FSMState.onEnter] call, but it will
   /// receive [FSMState.onExit] upon transition.
-  const ImmutableFSM({
-    required FSMState<Event, Data> initialState,
-    Data? data,
-  }) : this._(
-          state: initialState,
-          data: data,
-          transitions: const _TransitionMap<Never, Never>.empty(),
-        );
+  const ImmutableFSM({required FSMState<Event, Data> initialState, Data? data})
+    : this._(
+        state: initialState,
+        data: data,
+        transitions: const <Never, Never>{},
+      );
 
   /// Internal constructor that allows re-creating the complete state
   /// of the FSM.
   const ImmutableFSM._({
     required this.state,
-    required _TransitionMap<Event, Data> transitions,
+    required this._transitions,
     this.data,
-  }) : _transitions = transitions;
+  });
 
   /// Copies self with only specified data replaced.
   ImmutableFSM<Event, Data> _copyWith({
     FSMState<Event, Data>? state,
     Data? data,
     _TransitionMap<Event, Data>? transitions,
-  }) =>
-      ImmutableFSM<Event, Data>._(
-        state: state ?? this.state,
-        data: data ?? this.data,
-        transitions: transitions ?? _transitions,
-      );
+  }) => ImmutableFSM<Event, Data>._(
+    state: state ?? this.state,
+    data: data ?? this.data,
+    transitions: transitions ?? _transitions,
+  );
 
   /// Current state.
   final FSMState<Event, Data> state;
@@ -75,23 +71,17 @@ final class ImmutableFSM<Event, Data> {
     required FSMState<Event, Data> to,
     required Event event,
   }) {
-    IMap<FSMState<Event, Data>, _Transition<Event, Data>> newTransitions =
-        _TransitionMap<Event, Data>(
-      const <FSMState<Never, Never>, _Transition<Never, Never>>{},
-    );
+    final _TransitionMap<Event, Data> newTransitions =
+        Map<FSMState<Event, Data>, _Transition<Event, Data>>.unmodifiable(
+          <FSMState<Event, Data>, _Transition<Event, Data>>{
+            ..._transitions,
+            from: Map<Event, FSMState<Event, Data>>.unmodifiable(
+              <Event, FSMState<Event, Data>>{...?_transitions[from], event: to},
+            ),
+          },
+        );
 
-    if (_transitions.isNotEmpty) {
-      newTransitions = newTransitions.addAll(_transitions);
-    }
-    _Transition<Event, Data> transition =
-        newTransitions[from] ?? _Transition<Event, Data>();
-    transition = transition.add(event, to);
-
-    newTransitions = newTransitions.add(from, transition);
-
-    return _copyWith(
-      transitions: newTransitions,
-    );
+    return _copyWith(transitions: newTransitions);
   }
 
   /// Attempts to transition the state machine to a new state, which is
@@ -117,7 +107,7 @@ final class ImmutableFSM<Event, Data> {
     final FSMStateOnEnterResponse<Event, Data> response =
         FSMStateOnEnterResponse<Event, Data>._();
 
-    Data? newData = data;
+    Data? newData = data ?? this.data;
     await state.onExit(newData, response: response);
     newData = response._data ?? newData;
     response._reset();
@@ -141,15 +131,17 @@ final class ImmutableFSM<Event, Data> {
           runtimeType == other.runtimeType &&
           state == other.state &&
           data == other.data &&
-          const DeepCollectionEquality()
-              .equals(_transitions, other._transitions);
+          const DeepCollectionEquality().equals(
+            _transitions,
+            other._transitions,
+          );
 
   @override
   int get hashCode => Object.hash(
-        state,
-        _transitions,
-        data,
-      );
+    state,
+    const DeepCollectionEquality().hash(_transitions),
+    data,
+  );
 
   //coverage:ignore-start
   @override
@@ -180,6 +172,7 @@ final class ImmutableFSM<Event, Data> {
 
     return buf.toString();
   }
+
   //coverage:ignore-end
 }
 
@@ -208,11 +201,11 @@ abstract class FSMState<Event, Data> {
 }
 
 /// A transition type - just an alias for readability.
-typedef _Transition<Event, Data> = IMap<Event, FSMState<Event, Data>>;
+typedef _Transition<Event, Data> = Map<Event, FSMState<Event, Data>>;
 
 /// A type alias for the hashmap holding the states and transitions.
-typedef _TransitionMap<Event, Data>
-    = IMap<FSMState<Event, Data>, _Transition<Event, Data>>;
+typedef _TransitionMap<Event, Data> =
+    Map<FSMState<Event, Data>, _Transition<Event, Data>>;
 
 /// A handler that is given to any [FSMState] to provide a response.
 ///
@@ -230,8 +223,8 @@ final class FSMStateOnEnterResponse<Event, Data>
   Event? _event;
 
   /// Emit an [event] to advance FSM to the next state.
-  //ignore: use_setters_to_change_properties
-  void emitEvent(Event event) => this._event = event;
+  // ignore: use_setters_to_change_properties
+  void emitEvent(Event event) => _event = event;
 
   /// Clears the handler.
   @override
@@ -251,8 +244,8 @@ final class FSMStateOnExitResponse<Event, Data> {
   Data? _data;
 
   /// Emit an updated [data] to export metadata out of the state.
-  //ignore: use_setters_to_change_properties
-  void emitData(Data data) => this._data = data;
+  // ignore: use_setters_to_change_properties
+  void emitData(Data data) => _data = data;
 
   /// Clears the handler.
   void _reset() {

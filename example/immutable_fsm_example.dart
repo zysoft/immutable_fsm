@@ -105,7 +105,7 @@ class ReceivingCoin extends FSMState<TurnstileEvent, TurnstileMetadata> {
   Future<void> onEnter(
     TurnstileMetadata? data, {
     required FSMStateOnEnterResponse<TurnstileEvent, TurnstileMetadata>
-        response,
+    response,
   }) async {
     final int? coinValue = data?.coinValue;
     if (coinValue == null) {
@@ -113,9 +113,7 @@ class ReceivingCoin extends FSMState<TurnstileEvent, TurnstileMetadata> {
         ..emitEvent(TurnstileEvent.error)
         ..emitData(
           const TurnstileMetadata(
-            error: WrongCoinException(
-              'You have to put in a real coin.',
-            ),
+            error: WrongCoinException('You have to put in a real coin.'),
           ),
         );
       return;
@@ -162,9 +160,9 @@ class WrongCoinException implements Exception {
 /// The configuration of the state machine, which is also it's initial state.
 final ImmutableFSM<TurnstileEvent, TurnstileMetadata> _initialFSM =
     const ImmutableFSM<TurnstileEvent, TurnstileMetadata>(
-  initialState: Locked(),
-  data: TurnstileMetadata(),
-)
+          initialState: Locked(),
+          data: TurnstileMetadata(),
+        )
         .addTransition(
           from: const Locked(),
           to: const ReceivingCoin(),

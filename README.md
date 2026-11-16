@@ -21,7 +21,7 @@ To start using `ImmutableFSM`, add it as a dependency in your `pubspec.yaml` fil
 
 ```yaml
 dependencies:
-  immutable_fsm: ^1.0.0
+  immutable_fsm: ^1.2.0
 ```
 
 Then, run `flutter pub get` to install the package.
